@@ -20,7 +20,32 @@ async function getAirQuality(lat: number, lon: number) {
   const apiKey = process.env.OPENWEATHERMAPAPI;
   const url = `http://api.openweathermap.org/data/2.5/air_pollution?lat=${lat}&lon=${lon}&appid=${apiKey}`;
   const response = await axios.get(url);
-  console.log(`OpenWeather API data: ${JSON.stringify(response.data, null, 2)}`);
+  // console.log(`OpenWeather API data: ${JSON.stringify(response.data, null, 2)}`);
+  // [1] OpenWeather API data: {
+  //   [1]   "coord": {
+  //   [1]     "lon": xxx,
+  //   [1]     "lat": xxx
+  //   [1]   },
+  //   [1]   "list": [
+  //   [1]     {
+  //   [1]       "main": {
+  //   [1]         "aqi": 1
+  //   [1]       },
+  //   [1]       "components": {
+  //   [1]         "co": xxx,
+  //   [1]         "no": xxx,
+  //   [1]         "no2": xxx,
+  //   [1]         "o3": xxx,
+  //   [1]         "so2": 1.46,
+  //   [1]         "pm2_5": 2.52,
+  //   [1]         "pm10": 5.8,
+  //   [1]         "nh3": 0.35
+  //   [1]       },
+  //   [1]       "dt": xxxxxxxx
+  //   [1]     }
+  //   [1]   ]
+  //   [1] }
+    
   const airQualityIndex = response.data.list[0].main.aqi;
   return airQualityIndex;
 }
@@ -47,9 +72,9 @@ app.get('/', (req: Request, res: Response) => {
 
 app.post('/incoming', async (req, res) => {
   const message = req.body;
-  console.log(`message: ${JSON.stringify(message, null, 2)}`); // Use JSON.stringify to print the object
+  // console.log(`message: ${JSON.stringify(message, null, 2)}`); // Use JSON.stringify to print the object
   // Example of message if sending location from whatsapp:
-  // [1] BC_DEBUG message: {
+  // [1] message: {
   // [1]   "Latitude": "xxx",  //Blurred the location
   // [1]   "Longitude": "xxx", //Blurred the location
   // [1]   "SmsMessageSid": "xxx",
@@ -73,7 +98,6 @@ app.post('/incoming', async (req, res) => {
   console.log(Latitude, Longitude);
   const airQualityIndex = await getAirQuality(Latitude, Longitude);
   console.log("airQuality", airQualityIndex);
-  console.log(`Received message from ${Body}`);
 
   const alert = await predictHazard(airQualityIndex);
 
