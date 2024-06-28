@@ -16,6 +16,7 @@ async function getAirQuality(lat: number, lon: number) {
   const apiKey = process.env.OPENWEATHERMAPAPI;
   const url = `http://api.openweathermap.org/data/2.5/air_pollution?lat=${lat}&lon=${lon}&appid=${apiKey}`;
   const response = await axios.get(url);
+  console.log(`OpenWeather API data: ${JSON.stringify(response.data, null, 2)}`);
   const airQualityIndex = response.data.list[0].main.aqi;
   return airQualityIndex;
 }
