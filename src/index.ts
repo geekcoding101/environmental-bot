@@ -2,6 +2,7 @@ import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
 import twilio from 'twilio';
 import axios from 'axios';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 
 dotenv.config();
 
@@ -10,7 +11,10 @@ const port = process.env.PORT;
 const accountSid = process.env.ACCOUNTID;
 const authToken = process.env.AUTHTOKEN;
 
-app.use(express.urlencoded({ extended: true }));
+const geminiAPIKey = process.env.GEMINIAPIKEY as string;
+const genAI = new GoogleGenerativeAI(geminiAPIKey);
+const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
 
 async function getAirQuality(lat: number, lon: number) {
   const apiKey = process.env.OPENWEATHERMAPAPI;
@@ -21,11 +25,25 @@ async function getAirQuality(lat: number, lon: number) {
   return airQualityIndex;
 }
 
+const MessagingResponse = twilio.twiml.MessagingResponse;
+
+const predictHazard = async (airQualityIndex: number) => {
+  const prompt = `The air quality index is ${airQualityIndex}. The AQI scale is from 1 to 5, where 1 is good and 5 is very poor. Predict the potential hazard level and provide safety advice.`;
+  const result = await model.generateContent(prompt);
+  const response = await result.response;
+  const text = response.text();
+  console.log(text);
+  return text;
+}
+
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
+
 app.get('/', (req: Request, res: Response) => {
   res.send('Express + TypeScript Server');
 });
 
-const MessagingResponse = twilio.twiml.MessagingResponse;
 
 app.post('/incoming', async (req, res) => {
   const message = req.body;
@@ -52,10 +70,16 @@ app.post('/incoming', async (req, res) => {
   // [1] }
 
   const {Latitude, Longitude, From, Body} = message;
+  console.log(Latitude, Longitude);
   const airQualityIndex = await getAirQuality(Latitude, Longitude);
-  console.log(`Air quality index in your places is ${airQualityIndex}`);
+  console.log("airQuality", airQualityIndex);
+  console.log(`Received message from ${Body}`);
+
+  const alert = await predictHazard(airQualityIndex);
+
   const twiml = new MessagingResponse();
-  twiml.message(`You said: ${message.Body}`);
+  twiml.message(alert);
+
   res.writeHead(200, { 'Content-Type': 'text/xml' });
   res.end(twiml.toString());
 });
