@@ -1,0 +1,35 @@
+{
+  "name": "weather-suggestion-bot",
+  "description": "A WhatsApp bot that provides weather suggestions based on air quality index.",
+  "repository": "https://github.com/geekcoding101/environmental-bot/",
+  "success_url": "/",
+  "keywords": [
+    "whatsapp",
+    "bot",
+    "weather",
+    "air quality",
+    "express",
+    "node",
+    "typescript",
+    "twilio",
+    "openweathermap",
+    "google generative ai",
+    "GenAI",
+    "AI"
+  ],
+  "env": {
+    "OPENWEATHERMAPAPI": {
+      "description": "API Key for OpenWeatherMap",
+      "required": true
+    },
+    "GEMINIAPIKEY": {
+      "description": "API Key for Google Generative AI",
+      "required": true
+    }
+  },
+  "buildpacks": [
+    {
+      "url": "heroku/nodejs"
+    }
+  ]
+}

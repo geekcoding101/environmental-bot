@@ -3,30 +3,47 @@
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
+  "engines": {
+    "node": ">=18.18.0 <19",
+    "npm": ">=9.0.0 <10"
+  },
   "scripts": {
-    "build": "npx tsc",
+    "build": "tsc",
     "start": "node dist/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "whatsapp",
+    "bot",
+    "weather",
+    "air quality",
+    "express",
+    "node",
+    "typescript",
+    "twilio",
+    "openweathermap",
+    "google generative ai",
+    "GenAI",
+    "AI"
+  ],
+  "author": "geekcoding101@gmail.com",
+  "license": "UNLICENSED",
   "dependencies": {
     "@google/generative-ai": "^0.14.0",
-    "axios": "^1.7.2",
-    "dotenv": "^16.4.5",
-    "express": "^4.19.2",
-    "twilio": "^5.2.1"
-  },
-  "devDependencies": {
     "@types/axios": "^0.14.0",
     "@types/express": "^4.17.21",
     "@types/node": "^20.14.9",
+    "axios": "^1.7.2",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "twilio": "^5.2.1",
+    "typescript": "^5.5.2"
+  },
+  "devDependencies": {
     "@types/twilio": "^3.19.3",
     "concurrently": "^8.2.2",
     "nodemon": "^3.1.4",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.5.2"
+    "ts-node": "^10.9.2"
   }
 }
