@@ -94,15 +94,15 @@ app.post('/incoming', async (req, res) => {
   // [1]   "ApiVersion": "2010-04-01"
   // [1] }
 
-  const {Latitude, Longitude, From, Body} = message;
-  console.log(Latitude, Longitude);
-  const airQualityIndex = await getAirQuality(Latitude, Longitude);
-  console.log("airQuality", airQualityIndex);
+  const {From, Body} = message;
+  // console.log(Latitude, Longitude);
+  // const airQualityIndex = await getAirQuality(Latitude, Longitude);
+  // console.log("airQuality", airQualityIndex);
 
-  const alert = await predictHazard(airQualityIndex);
+  // const alert = await predictHazard(airQualityIndex);
 
   const twiml = new MessagingResponse();
-  twiml.message(alert);
+  twiml.message(From + "said: " + Body + ". This is for AS blue testing.");
 
   res.writeHead(200, { 'Content-Type': 'text/xml' });
   res.end(twiml.toString());
